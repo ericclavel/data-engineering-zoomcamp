@@ -10,5 +10,34 @@ services:
     ports:
       - "5432:5432"
 
+
+  ingest:
+    build: .
+    image: taxi_ingest:v001
+
+    command: >
+      --pg_user=root
+      --pg_password=root
+      --pg_host=pgdatabase
+      --pg_port=5432
+      --pg_db=ny_taxi
+      --target_table=yellow_taxi_trips
+      --year=2021
+      --month=1
+      --chunksize=100000
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "8085:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+
 volumes:
   ny_taxi_postgres_data:
+  pgadmin_data:
+
